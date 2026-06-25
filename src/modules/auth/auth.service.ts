@@ -2,6 +2,9 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../../lib/prisma";
 import { IloginUser } from "./auth.interface";
 
+import config from "../../config";
+import { jwtUtilis } from "../../utilities/jwt";
+
 
 const loginUser = async (payload: IloginUser) => {
     const { email, password } = payload;
@@ -14,7 +17,22 @@ const loginUser = async (payload: IloginUser) => {
     if (!isPasswordMatched) {
         throw new Error("Invalid credential!");
     }
-    return user;
+
+    const jwtPayload = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+    }
+
+
+    const accessToken = jwtUtilis.createToken(jwtPayload, config.jwt_access_secret, config.jwt_access_expires_in)
+
+    const refreshToken = jwtUtilis.createToken(jwtPayload, config.jwt_refresh_secret, config.jwt_refresh_expires_in
+    )
+
+
+    return { accessToken, refreshToken };
 
 }
 
