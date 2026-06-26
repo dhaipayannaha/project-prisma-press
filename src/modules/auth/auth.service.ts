@@ -25,6 +25,11 @@ const loginUser = async (payload: IloginUser) => {
         role: user.role
     }
 
+    // const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret,
+    //     {
+    //         expiresIn: config.jwt_access_expires_in
+    //     } as SignOptions
+    // )
 
     const accessToken = jwtUtilis.createToken(jwtPayload, config.jwt_access_secret, config.jwt_access_expires_in)
 
