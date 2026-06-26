@@ -4,6 +4,9 @@ import httpStatus from "http-status";
 import { userService } from "./user.service";
 import { catchAsync } from "../../utilities/catchAsync";
 import { sendResponse } from "../../utilities/sendResponse";
+import jwt from "jsonwebtoken";
+import config from "../../config";
+import { jwtUtilis } from "../../utilities/jwt";
 
 
 
@@ -56,6 +59,29 @@ const registerUser = catchAsync(async (req: Request, res: Response, next: NextFu
 
 const getMyProfile = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
+    // const cookies = req.cookies;
+    // const { accessToken } = req.cookies;
+    // console.log(req.user, "user Request");
+
+    // const verifiedToken = jwtUtilis.verifyToken(accessToken, config.jwt_access_secret);
+    // console.log(verifiedToken);
+
+    // if (typeof verifiedToken === "string") {
+    //     throw new Error(verifiedToken);
+    // }
+
+    const profile = await userService.getMyProfileFromDB(req.user?.id as string);
+
+
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "User profile fetched successfully",
+        data: {
+            profile
+        }
+    })
 })
 
 
