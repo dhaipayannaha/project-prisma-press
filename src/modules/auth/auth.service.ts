@@ -13,6 +13,10 @@ const loginUser = async (payload: IloginUser) => {
         where: { email }
     })
 
+    if (user.activeStatus === "BLOCKED") {
+        throw new Error("User is blocked")
+    }
+
     const isPasswordMatched = await bcrypt.compare(password, user.password);
     if (!isPasswordMatched) {
         throw new Error("Invalid credential!");
